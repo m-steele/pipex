@@ -6,7 +6,7 @@
 /*   By: ekosnick <ekosnick@student.42.f>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 12:17:10 by ekosnick          #+#    #+#             */
-/*   Updated: 2025/05/30 17:20:00 by ekosnick         ###   ########.fr       */
+/*   Updated: 2025/06/02 11:23:18 by ekosnick         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,19 @@ char *pathfinder(char *cmd, char *env)
 	
 }
 
+// THIS IS HOW TO PRINT THE ENVIRONMENT
+// int main(int ac, char **arg, char **env)
+// {
+// 	int i = 0;
+
+// 	printf("Environment Variables:\n");
+// 	while (env[i] != NULL) {
+// 		printf("%s\n", env[i]);
+// 		i++;
+// 	}
+// 	return (0);
+// }
+
 int	main(int ac, char **av, char **env)
 {
 	int	infile;
@@ -46,9 +59,9 @@ int	main(int ac, char **av, char **env)
 	{
 		infile = openfd(av[2], 0);
 		outfile = openfd(av[ac - 1], 1);
-		if (dup2(infile, 0) == -1)
+		if (dup2(infile, 0) == -1) /*redirect input*/
 			perror("Error in:");
-		if (dup2(outfile, 1) == -1)
+		if (dup2(outfile, 1) == -1) /*redirect output*/
 			perror("Error out:");
 
 // pathfinder(env);/*get use PATH and : to find commands*/
