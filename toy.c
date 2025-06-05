@@ -76,6 +76,8 @@ int main()
 		printf("message from the child: '%s'\n", buff);
 		exit(EXIT_SUCCESS);
 	}
+	// waipid(pid == 0)
+
 	// return (0);
 }
 

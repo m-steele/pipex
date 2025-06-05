@@ -6,7 +6,7 @@
 /*   By: ekosnick <ekosnick@student.42.f>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 12:17:10 by ekosnick          #+#    #+#             */
-/*   Updated: 2025/06/02 11:23:18 by ekosnick         ###   ########.fr       */
+/*   Updated: 2025/06/05 14:56:17 by ekosnick         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,17 +52,27 @@ char *pathfinder(char *cmd, char *env)
 
 int	main(int ac, char **av, char **env)
 {
-	int	infile;
-	int	outfile;
+	int	infile; /*child1*/
+	int	outfile; /*child2*/
+	int pid1;
+	int pid2;
+	// int	i;
 
+	// i = -1;
 	if (ac >= 5)
 	{
 		infile = openfd(av[2], 0);
 		outfile = openfd(av[ac - 1], 1);
 		if (dup2(infile, 0) == -1) /*redirect input*/
+		{
 			perror("Error in:");
+			exit(EXIT_FAILURE);
+		}
 		if (dup2(outfile, 1) == -1) /*redirect output*/
+		{
 			perror("Error out:");
+			exit(EXIT_FAILURE);
+		}
 
 // pathfinder(env);/*get use PATH and : to find commands*/
 // cmd(); /*write a function that implements a comand from pathfinder()*/
