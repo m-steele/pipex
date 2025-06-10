@@ -6,7 +6,7 @@
 /*   By: ekosnick <ekosnick@student.42.f>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 12:11:15 by ekosnick          #+#    #+#             */
-/*   Updated: 2025/06/02 09:43:28 by ekosnick         ###   ########.fr       */
+/*   Updated: 2025/06/06 15:19:57 by ekosnick         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,4 @@
 # include <limits.h>   /* PATH_MAX (recommended for full_path buffer) */
 # include "libft/libft.h"
 
-typedef struct s_pipex
-	{
-	
-	}	t_pipex
 #endif

@@ -6,7 +6,7 @@
 #    By: ekosnick <ekosnick@student.42.f>           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/25 09:57:19 by ekosnick          #+#    #+#              #
-#    Updated: 2025/05/14 14:31:52 by ekosnick         ###   ########.fr        #
+#    Updated: 2025/06/09 10:42:52 by ekosnick         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,14 +25,11 @@ SRCS =	ft_bzero.c ft_isalnum.c ft_isalpha.c \
 		ft_itoa.c ft_strmapi.c ft_striteri.c ft_putchar_fd.c \
 		ft_putstr_fd.c ft_putendl_fd.c ft_putnbr_fd.c \
 		ft_strncpy.c ft_abs.c \
-		
 		process_xx.c process_x.c process_u.c process_s.c \
 		process_p.c process_id.c process_c.c ft_printf.c \
-		
 		ft_lstnew.c ft_lstadd_front.c ft_lstsize.c \
 		ft_lstlast.c ft_lstadd_back.c ft_lstdelone.c ft_lstclear.c \
 		ft_lstiter.c ft_lstmap.c \
-		
 		get_next_line.c
 
 OBJ = $(SRCS:.c=.o)
