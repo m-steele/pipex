@@ -6,22 +6,11 @@
 /*   By: ekosnick <ekosnick@student.42.f>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 12:17:10 by ekosnick          #+#    #+#             */
-/*   Updated: 2025/06/10 13:07:39 by ekosnick         ###   ########.fr       */
+/*   Updated: 2025/06/11 11:03:58 by ekosnick         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "pipex.h"
-
-int	openfd(char *fd, int in_out) /*consider adding this to libft*/
-{
-	if (in_out == 0)
-		return(open(fd, O_RDONLY));
-	if (in_out == 1)
-		return(open(fd, O_CREAT | O_WRONLY | O_TRUNC,
-				S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH));
-	else
-		return (-1);
-}
 
 // int	openfd(char *file_path, int in_out) /*consider adding this to libft*/
 // {
@@ -46,6 +35,17 @@ int	openfd(char *fd, int in_out) /*consider adding this to libft*/
 // 		return(fd);
 // 	}
 // }
+
+int	openfd(char *fd, int in_out) /*consider adding this to libft*/
+{
+	if (in_out == 0)
+		return(open(fd, O_RDONLY));
+	if (in_out == 1)
+		return(open(fd, O_CREAT | O_WRONLY | O_TRUNC,
+				S_IRUSR | S_IWUSR | S_IRGRP | /*S_IWGRP |*/ S_IROTH));
+	else
+		return (-1);
+}
 
 void	ft_free_split(char **split) /*add this to libft*/
 {
@@ -117,49 +117,53 @@ void	laypipe(char *cmd_full, char **cmd_args, char **env)
 	int		fd[2];
 	int		pid;
 
-	if (pipe(fd) != 0)
-	{
-		perror("Error in:");
-		exit(EXIT_FAILURE);
-	}
+	pipe(fd);
 	pid = fork();
-	if (pid < 0)
-	{
-		perror("Error in:");
-		exit(EXIT_FAILURE);
-	}
 	if (pid > 0)
 	{
-		dup2(fd[1], 1); /*STDOUT_FILENO*/
 		close(fd[1]);
-		close(fd[0]);
+		dup2(fd[0], 0); /*STDIN_FILENO*/
 		waitpid(pid, NULL, 0);
-
 	}
 	if (pid == 0)
 	{
-		dup2(fd[0], 0); /*STDIN_FILENO*/
 		close(fd[0]);
-		close(fd[1]);
-		if (execve(cmd_full, cmd_args, env) == -1)
-		{
-			perror("Child Error:");
-			exit(EXIT_FAILURE);
-		}
-		/*also need to consider that this may be decleaered in the main function
-		as a pointer I am not sure if we can do that int *child, so that each time
-		it is called in the loop this will address the next command????*/
+		dup2(fd[1], 1); /*STDOUT_FILENO*/
+		execve(cmd_full, cmd_args, env);
+		perror("Child Error:");
+		exit(EXIT_FAILURE);
 	}
 }
 
+void	dig_ditch(char *av, char **env)
+{
+	char	*cmd_full;
+	char	**cmd_args;
+	
+	cmd_args = ft_split(av, ' ');
+	if (!cmd_args)
+		perror("split failed");
+	cmd_full = pathfinder(cmd_args[0], env);
+	if (!cmd_full)
+	{
+		printf("Command not found\n");
+		ft_free_split(cmd_args);
+	}
+	laypipe(cmd_full, cmd_args, env);
+	free(cmd_full);
+	ft_free_split(cmd_args);
+}
+
+
 int	main(int ac, char **av, char **env)
 {
-	char	**cmd_args;
-	char	*cmd_full;
+	// char	**cmd_args;
+	// char	*cmd_full;
 	int		fdin;
 	int		fdout;
 	int		i;
-	
+
+	printf("ac = %d\n", ac);
 	if (ac > 4)
 	{
 		fdin = openfd(av[1], 0);
@@ -168,40 +172,49 @@ int	main(int ac, char **av, char **env)
 		i = 3;
 		while (i < ac -2)
 		{
-			cmd_args = ft_split(av[i], ' ');
-			if (!cmd_args)
-			{
-				perror("split failed");
-				return (1);
-			}
-			cmd_full = pathfinder(cmd_args[0], env);
-			if (!cmd_full)
-			{
-				printf("Command not found\n");
-				ft_free_split(cmd_args);
-				return (1);
-			}
-			laypipe(cmd_full, cmd_args, env);
-			free(cmd_full);
-			ft_free_split(cmd_args);
+			dig_ditch(av[i], env);
+			// cmd_args = ft_split(av[i], ' ');
+			// if (!cmd_args)
+			// {
+			// 	perror("split failed");
+			// 	return (1);
+			// }
+			// cmd_full = pathfinder(cmd_args[0], env);
+			// if (!cmd_full)
+			// {
+			// 	printf("Command not found\n");
+			// 	ft_free_split(cmd_args);
+			// 	return (1);
+			// }
+			// laypipe(cmd_full, cmd_args, env);
+			// free(cmd_full);
+			// ft_free_split(cmd_args);
 			i++;
 		}
-		cmd_args = ft_split(av[ac - 2], ' ');
+/****************************************** */
+/*		The problem here is that dig_ditch()*/
+/*		uses laypipe() which uses fork()	*/
+/*		and we do not want to fork the last */
+/*		command								*/
+/****************************************** */
+		dig_ditch(av[i], env);
+
+		// cmd_args = ft_split(av[ac - 2], ' ');
 		fdout = openfd(av[ac - 1], 1);
 		dup2(fdout, 1);
 		close(fdout);
-		cmd_full = pathfinder(cmd_args[0], env);
-		if (!cmd_full)
-		{
-			printf("command not found");
-			ft_free_split(cmd_args);
-			return (1);
-		}
-		if (execve(cmd_full, cmd_args, env) == -1)
-		{
-			perror("excecve failed:");
-			exit(EXIT_FAILURE);
-		}
+		// cmd_full = pathfinder(cmd_args[0], env);
+		// if (!cmd_full)
+		// {
+		// 	printf("command not found");
+		// 	ft_free_split(cmd_args);
+		// 	return (1);
+		// }
+		// if (execve(cmd_full, cmd_args, env) == -1)
+		// {
+		// 	perror("excecve failed:");
+		// 	exit(EXIT_FAILURE);
+		// }
 		return (0);
 	}
 	else
@@ -209,7 +222,7 @@ int	main(int ac, char **av, char **env)
 	return (1);
 }
 
-// THIS IS HOW TO PRINT THE ENVIRONMENT
+// PRINT THE ENVIRONMENT
 // int main(int ac, char **arg, char **env)
 // {
 // 	int i = 0;
@@ -220,37 +233,4 @@ int	main(int ac, char **av, char **env)
 // 		i++;
 // 	}
 // 	return (0);
-// }
-
-// int	main(int ac, char **av, char **env)
-// {
-// 	int	infile; /*stdin*/
-// 	int	outfile; /*stdout*/
-// 	int pid1;
-// 	int pid2;
-// 	// int	i;
-
-// 	// i = -1;
-// 	if (ac >= 5)
-// 	{
-// 		infile = openfd(av[2], 0);
-// 		outfile = openfd(av[ac - 1], 1);
-// 		if (dup2(infile, 0) == -1) /*redirect input*/
-// 		{
-// 			perror("Error in:");
-// 			exit(EXIT_FAILURE);
-// 		}
-// 		if (dup2(outfile, 1) == -1) /*redirect output*/
-// 		{
-// 			perror("Error out:");
-// 			exit(EXIT_FAILURE);
-// 		}
-// 		pathfinder(env);
-// 		laypipe(cmd, child, fd_in);
-// 		close(infile);
-// 		close(outfile);
-// 	}
-// 	else
-// 		perror("Error ac:");
-// 	return (1);
 // }
