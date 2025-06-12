@@ -6,7 +6,7 @@
 /*   By: ekosnick <ekosnick@student.42.f>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 12:17:10 by ekosnick          #+#    #+#             */
-/*   Updated: 2025/06/12 10:53:44 by ekosnick         ###   ########.fr       */
+/*   Updated: 2025/06/12 11:34:15 by ekosnick         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,7 +146,7 @@ void	dig_ditch(char *av, char **env)
 	cmd_full = pathfinder(cmd_args[0], env);
 	if (!cmd_full)
 	{
-		printf("Command not found\n");
+		printf("Command '%s' not found\n", cmd_args[0]);
 		ft_free_split(cmd_args);
 	}
 	laypipe(cmd_full, cmd_args, env);
@@ -154,6 +154,20 @@ void	dig_ditch(char *av, char **env)
 	ft_free_split(cmd_args);
 }
 
+void last_cmd(int ac, char **av, char **env)
+{
+	char	*cmd_full;
+	char	**cmd_args;
+
+	cmd_args = ft_split(av[ac - 2], ' ');
+	cmd_full = pathfinder(cmd_args[0], env);
+	if (!cmd_full)
+	{
+		printf("Command '%s' not found\n", cmd_args[0]);
+		ft_free_split(cmd_args);
+	}
+	execve(cmd_full, cmd_args, env);
+}
 
 int	main(int ac, char **av, char **env)
 {
@@ -161,39 +175,21 @@ int	main(int ac, char **av, char **env)
 	int		fdout;
 	int		i;
 
-	char	*cmd_full;
-	char	**cmd_args;
-
-
 	// if (ac > 1 && ft_strncpy(av[1],"here_doc", 8))
 	// 	run_delim_prog(ac, ac, env);
-	if (ac > 4)
+	if (ac >= 5)
 	{
 		fdin = openfd(av[1], 0);
 		dup2(fdin, 0);
-		close(fdin);
-		i = 3;
+		i = 2;
 		while (i < ac -2)
 		{
 			dig_ditch(av[i], env);
 			i++;
 		}
-/****************************************** */
-/*		The problem here is that dig_ditch()*/
-/*		uses laypipe() which uses fork()	*/
-/*		and we do not want to fork the last */
-/*		command								*/
-/****************************************** */
-		// dig_ditch(av[i], env);
-
 		fdout = openfd(av[ac - 1], 1);
 		dup2(fdout, 1);
-		close(fdout);
-
-		cmd_args = ft_split(av[ac - 2], ' ');
-		cmd_full = pathfinder(cmd_args[0], env);
-		execve(cmd_full, cmd_args, env);
-		
+		last_cmd(ac, av, env);
 		return (0);
 	}
 	else
