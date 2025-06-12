@@ -6,7 +6,7 @@
 /*   By: ekosnick <ekosnick@student.42.f>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 12:17:10 by ekosnick          #+#    #+#             */
-/*   Updated: 2025/06/11 11:03:58 by ekosnick         ###   ########.fr       */
+/*   Updated: 2025/06/12 10:53:44 by ekosnick         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,13 +157,16 @@ void	dig_ditch(char *av, char **env)
 
 int	main(int ac, char **av, char **env)
 {
-	// char	**cmd_args;
-	// char	*cmd_full;
 	int		fdin;
 	int		fdout;
 	int		i;
 
-	printf("ac = %d\n", ac);
+	char	*cmd_full;
+	char	**cmd_args;
+
+
+	// if (ac > 1 && ft_strncpy(av[1],"here_doc", 8))
+	// 	run_delim_prog(ac, ac, env);
 	if (ac > 4)
 	{
 		fdin = openfd(av[1], 0);
@@ -173,22 +176,6 @@ int	main(int ac, char **av, char **env)
 		while (i < ac -2)
 		{
 			dig_ditch(av[i], env);
-			// cmd_args = ft_split(av[i], ' ');
-			// if (!cmd_args)
-			// {
-			// 	perror("split failed");
-			// 	return (1);
-			// }
-			// cmd_full = pathfinder(cmd_args[0], env);
-			// if (!cmd_full)
-			// {
-			// 	printf("Command not found\n");
-			// 	ft_free_split(cmd_args);
-			// 	return (1);
-			// }
-			// laypipe(cmd_full, cmd_args, env);
-			// free(cmd_full);
-			// ft_free_split(cmd_args);
 			i++;
 		}
 /****************************************** */
@@ -197,24 +184,16 @@ int	main(int ac, char **av, char **env)
 /*		and we do not want to fork the last */
 /*		command								*/
 /****************************************** */
-		dig_ditch(av[i], env);
+		// dig_ditch(av[i], env);
 
-		// cmd_args = ft_split(av[ac - 2], ' ');
 		fdout = openfd(av[ac - 1], 1);
 		dup2(fdout, 1);
 		close(fdout);
-		// cmd_full = pathfinder(cmd_args[0], env);
-		// if (!cmd_full)
-		// {
-		// 	printf("command not found");
-		// 	ft_free_split(cmd_args);
-		// 	return (1);
-		// }
-		// if (execve(cmd_full, cmd_args, env) == -1)
-		// {
-		// 	perror("excecve failed:");
-		// 	exit(EXIT_FAILURE);
-		// }
+
+		cmd_args = ft_split(av[ac - 2], ' ');
+		cmd_full = pathfinder(cmd_args[0], env);
+		execve(cmd_full, cmd_args, env);
+		
 		return (0);
 	}
 	else
