@@ -6,35 +6,11 @@
 /*   By: ekosnick <ekosnick@student.42.f>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 12:17:10 by ekosnick          #+#    #+#             */
-/*   Updated: 2025/06/12 11:34:15 by ekosnick         ###   ########.fr       */
+/*   Updated: 2025/06/13 09:35:23 by ekosnick         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "pipex.h"
-
-// int	openfd(char *file_path, int in_out) /*consider adding this to libft*/
-// {
-// 	int	fd;
-
-// 	if (in_out == 0)
-// 	{
-// 		fd = open(file_path, O_RDONLY);
-// 		if (fd == -1)
-// 			perror("Infile open error");
-// 		return(fd);
-// 	}
-// 	if (in_out == 1)
-// 	{
-// 		fd = open(file_path, O_CREAT | O_WRONLY | O_TRUNC,
-// 				S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH); // Mode 0664 (rw-rw-r--)
-// 		if (fd == -1)
-// 		{
-// 			perror("Outfile open error");
-// 			return(-1);
-// 		}
-// 		return(fd);
-// 	}
-// }
 
 int	openfd(char *fd, int in_out) /*consider adding this to libft*/
 {
@@ -42,12 +18,14 @@ int	openfd(char *fd, int in_out) /*consider adding this to libft*/
 		return(open(fd, O_RDONLY));
 	if (in_out == 1)
 		return(open(fd, O_CREAT | O_WRONLY | O_TRUNC,
-				S_IRUSR | S_IWUSR | S_IRGRP | /*S_IWGRP |*/ S_IROTH));
+				S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH, 0644));
+	if (in_out == 2)
+			return (open(fd, O_CREAT | O_WRONLY | O_APPEND, 0644));
 	else
 		return (-1);
 }
 
-void	ft_free_split(char **split) /*add this to libft*/
+void	free_split(char **split) /*add this to libft*/
 {
 	char **temp = split;
 	while (*split)
@@ -61,13 +39,13 @@ char	*cmd_path(char **path_split, char *cmd)
 	char	*full_path;
 	char	*temp;
 	
-	i = 0;
-	while (path_split[i])
+	i = -1;
+	while (path_split[i++])
 	{
 		full_path = ft_strjoin(path_split[i], "/");
 		if (!full_path)
 		{
-			ft_free_split(path_split);
+			free_split(path_split);
 			return (NULL);			
 		}
 		temp = full_path;
@@ -75,13 +53,12 @@ char	*cmd_path(char **path_split, char *cmd)
 		free(temp);
 		if (access(full_path, X_OK) == 0)
 		{
-			ft_free_split(path_split);
+			free_split(path_split);
 			return (full_path);
 		}
 		free(full_path);
-		i++;
 	}
-	ft_free_split(path_split);
+	free_split(path_split);
 	return (NULL);	
 }
 
@@ -147,11 +124,12 @@ void	dig_ditch(char *av, char **env)
 	if (!cmd_full)
 	{
 		printf("Command '%s' not found\n", cmd_args[0]);
-		ft_free_split(cmd_args);
+		free_split(cmd_args);
+		return;
 	}
 	laypipe(cmd_full, cmd_args, env);
 	free(cmd_full);
-	ft_free_split(cmd_args);
+	free_split(cmd_args);
 }
 
 void last_cmd(int ac, char **av, char **env)
@@ -164,10 +142,44 @@ void last_cmd(int ac, char **av, char **env)
 	if (!cmd_full)
 	{
 		printf("Command '%s' not found\n", cmd_args[0]);
-		ft_free_split(cmd_args);
+		free_split(cmd_args);
+		exit(127);
 	}
 	execve(cmd_full, cmd_args, env);
 }
+
+void	here_doc_writer(char *delim)
+{
+	int		fd[2];
+	char	*ln = NULL;
+	size_t	len = ft_strlen(delim);
+
+	pipe(fd);
+	if (fork() == 0)
+	{
+		close(fd[0]);
+		while (1)
+		{
+			write(1, "here_doc: ", 10);
+			ln = get_next_line(0);
+			if (!ln || (ft_strncmp(ln, delim, len) == 0 && ln[len] =='\n'))
+				break;
+			write(fd[1], ln, ft_strlen(ln));
+			free(ln);
+		}
+		free(ln);
+		close(fd[1]);
+		exit(0);
+	}
+	wait(NULL);
+	close(fd[1]);
+	dup2(fd[0], 0);
+	close(fd[0]);
+}
+
+/*
+OK THERE ARE STILL SOME LEAKY ISSUES PROBABLY ASSOCIATED WITH pathfinder()
+*/
 
 int	main(int ac, char **av, char **env)
 {
@@ -175,37 +187,31 @@ int	main(int ac, char **av, char **env)
 	int		fdout;
 	int		i;
 
-	// if (ac > 1 && ft_strncpy(av[1],"here_doc", 8))
-	// 	run_delim_prog(ac, ac, env);
+	if (ft_strncmp(av[1],"here_doc", 8) == 0 && ac >= 6)
+	{
+		here_doc_writer(av[2]);
+		i = 3;
+		while (i < ac - 2)
+			dig_ditch(av[i++], env);
+		fdout = openfd(av[ac - 1], 2);
+		dup2(fdout, 1);
+		close(fdout);
+		last_cmd(ac, av, env);
+		return (0);
+	}
 	if (ac >= 5)
 	{
 		fdin = openfd(av[1], 0);
 		dup2(fdin, 0);
 		i = 2;
 		while (i < ac -2)
-		{
-			dig_ditch(av[i], env);
-			i++;
-		}
+			dig_ditch(av[i++], env);
 		fdout = openfd(av[ac - 1], 1);
 		dup2(fdout, 1);
 		last_cmd(ac, av, env);
 		return (0);
 	}
 	else
-		printf("You messed up\n");
+		ft_printf("./pipex [infile | here_doc LIMITER] cmd1 cmd2 outfile\n");
 	return (1);
 }
-
-// PRINT THE ENVIRONMENT
-// int main(int ac, char **arg, char **env)
-// {
-// 	int i = 0;
-
-// 	printf("Environment Variables:\n");
-// 	while (env[i] != NULL) {
-// 		printf("%s\n", env[i]);
-// 		i++;
-// 	}
-// 	return (0);
-// }
