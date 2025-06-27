@@ -1,37 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strjoin.c                                       :+:      :+:    :+:   */
+/*   ft_lstnew.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ekosnick <ekosnick@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/02 10:21:31 by ekosnick          #+#    #+#             */
-/*   Updated: 2024/10/02 10:29:51 by ekosnick         ###   ########.fr       */
+/*   Created: 2025/05/23 11:38:23 by ekosnick          #+#    #+#             */
+/*   Updated: 2025/05/23 11:38:24 by ekosnick         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// NOte the below works in place of the while loops
-	// ft_strlcpy(join, s1, len); 
-	// ft_strlcat(join, s2, len);
 #include "libft.h"
 
-char	*ft_strjoin(char const *s1, char const *s2)
+t_list	*ft_lstnew(void *ct)
 {
-	int		i;
-	int		ii;
-	int		j;
-	char	*join;
+	t_list	*new_node;
 
-	join = (char *)malloc((ft_strlen(s1) + ft_strlen(s2) + 1) * sizeof(char));
-	if (!join)
+	new_node = (t_list *)malloc(sizeof(t_list));
+	if (!new_node)
 		return (NULL);
-	i = 0;
-	j = 0;
-	while (s1[i])
-		join[j++] = s1[i++];
-	ii = 0;
-	while (s2[ii])
-		join[j++] = s2[ii++];
-	join[j] = '\0';
-	return (join);
+	new_node->ct = ct;
+	new_node->nt = NULL;
+	if (!new_node)
+		return (NULL);
+	return (new_node);
 }

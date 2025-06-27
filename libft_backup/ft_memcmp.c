@@ -1,37 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strjoin.c                                       :+:      :+:    :+:   */
+/*   ft_memcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ekosnick <ekosnick@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/02 10:21:31 by ekosnick          #+#    #+#             */
-/*   Updated: 2024/10/02 10:29:51 by ekosnick         ###   ########.fr       */
+/*   Created: 2024/09/23 13:05:54 by ekosnick          #+#    #+#             */
+/*   Updated: 2024/10/02 10:18:28 by ekosnick         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// NOte the below works in place of the while loops
-	// ft_strlcpy(join, s1, len); 
-	// ft_strlcat(join, s2, len);
+// compares user specifed n bytes
 #include "libft.h"
 
-char	*ft_strjoin(char const *s1, char const *s2)
+int	ft_memcmp(const void *s1, const void *s2, size_t n)
 {
-	int		i;
-	int		ii;
-	int		j;
-	char	*join;
+	size_t			i;
+	unsigned char	*ss1;
+	unsigned char	*ss2;
 
-	join = (char *)malloc((ft_strlen(s1) + ft_strlen(s2) + 1) * sizeof(char));
-	if (!join)
-		return (NULL);
 	i = 0;
-	j = 0;
-	while (s1[i])
-		join[j++] = s1[i++];
-	ii = 0;
-	while (s2[ii])
-		join[j++] = s2[ii++];
-	join[j] = '\0';
-	return (join);
+	ss1 = (unsigned char *)s1;
+	ss2 = (unsigned char *)s2;
+	while (i < n)
+	{
+		if (ss1[i] != ss2[i])
+			return (ss1[i] - ss2[i]);
+		i++;
+	}
+	return (0);
 }

@@ -1,37 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strjoin.c                                       :+:      :+:    :+:   */
+/*   ft_striteri.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ekosnick <ekosnick@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/02 10:21:31 by ekosnick          #+#    #+#             */
-/*   Updated: 2024/10/02 10:29:51 by ekosnick         ###   ########.fr       */
+/*   Created: 2024/10/02 10:24:39 by ekosnick          #+#    #+#             */
+/*   Updated: 2024/10/02 10:24:42 by ekosnick         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// NOte the below works in place of the while loops
-	// ft_strlcpy(join, s1, len); 
-	// ft_strlcat(join, s2, len);
+// Modifies the string 's' so no copying or returning
+// But requires a call back function of this form
+// void	add_index_to_char(unsigned int i, char *c) {*c += i;}
 #include "libft.h"
 
-char	*ft_strjoin(char const *s1, char const *s2)
+void	ft_striteri(char *s, void (*f)(unsigned int, char*))
 {
-	int		i;
-	int		ii;
-	int		j;
-	char	*join;
+	unsigned int	i;
 
-	join = (char *)malloc((ft_strlen(s1) + ft_strlen(s2) + 1) * sizeof(char));
-	if (!join)
-		return (NULL);
 	i = 0;
-	j = 0;
-	while (s1[i])
-		join[j++] = s1[i++];
-	ii = 0;
-	while (s2[ii])
-		join[j++] = s2[ii++];
-	join[j] = '\0';
-	return (join);
+	while (s[i])
+	{
+		(*f)(i, &s[i]);
+		i++;
+	}
 }

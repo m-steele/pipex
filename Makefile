@@ -6,7 +6,7 @@
 #    By: ekosnick <ekosnick@student.42.f>           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/25 09:57:19 by ekosnick          #+#    #+#              #
-#    Updated: 2025/06/02 09:35:05 by ekosnick         ###   ########.fr        #
+#    Updated: 2025/06/27 10:07:46 by ekosnick         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@ CFLAGS = -Wall -Wextra -Werror -g
 INCLUDES = -Ilibft
 
 # Source files for the main application
-SRCS_MAIN = pipex.c \
+SRCS_MAIN = pipex.c pipex_utils.c\
 
 # Object files for the main application
 OBJ_DIR_MAIN = obj
@@ -51,7 +51,8 @@ LIBFT_SRCS = 	$(LIBFT_DIR)/ft_abs.c $(LIBFT_DIR)/ft_atoi.c \
 				$(LIBFT_DIR)/process_c.c $(LIBFT_DIR)/process_id.c \
 				$(LIBFT_DIR)/process_p.c $(LIBFT_DIR)/process_s.c \
 				$(LIBFT_DIR)/process_u.c $(LIBFT_DIR)/process_x.c \
-				$(LIBFT_DIR)/process_xx.c $(LIBFT_DIR)/get_next_line.c
+				$(LIBFT_DIR)/process_xx.c $(LIBFT_DIR)/ft_free_split.c \
+				$(LIBFT_DIR)/get_next_line.c $(LIBFT_DIR)/openfd.c \
 
 LIBFT_OBJ_DIR = $(LIBFT_DIR)/obj
 LIBFT_OBJS = $(patsubst $(LIBFT_DIR)/%.c, $(LIBFT_OBJ_DIR)/%.o, $(LIBFT_SRCS))

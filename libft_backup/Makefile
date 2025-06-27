@@ -6,7 +6,7 @@
 #    By: ekosnick <ekosnick@student.42.f>           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/25 09:57:19 by ekosnick          #+#    #+#              #
-#    Updated: 2025/06/27 10:04:00 by ekosnick         ###   ########.fr        #
+#    Updated: 2025/06/09 10:42:52 by ekosnick         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,7 @@ SRCS =	ft_bzero.c ft_isalnum.c ft_isalpha.c \
 		ft_substr.c ft_strjoin.c ft_strtrim.c ft_split.c \
 		ft_itoa.c ft_strmapi.c ft_striteri.c ft_putchar_fd.c \
 		ft_putstr_fd.c ft_putendl_fd.c ft_putnbr_fd.c \
-		ft_strncpy.c ft_abs.c ft_free_split.c openfd.c\
+		ft_strncpy.c ft_abs.c \
 		process_xx.c process_x.c process_u.c process_s.c \
 		process_p.c process_id.c process_c.c ft_printf.c \
 		ft_lstnew.c ft_lstadd_front.c ft_lstsize.c \

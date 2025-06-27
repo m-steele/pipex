@@ -6,7 +6,7 @@
 /*   By: ekosnick <ekosnick@student.42.f>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 12:11:15 by ekosnick          #+#    #+#             */
-/*   Updated: 2025/06/06 15:19:57 by ekosnick         ###   ########.fr       */
+/*   Updated: 2025/06/27 11:35:27 by ekosnick         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,5 +25,11 @@
 # include <sys/stat.h> /* stat, S_ISREG */
 # include <limits.h>   /* PATH_MAX (recommended for full_path buffer) */
 # include "libft/libft.h"
+
+/*pipex_utils*/
+char	*cmd_path(int i, char **path_split, char *cmd);
+char	*pathfinder(char *cmd, char **env);
+void	laypipe(char *cmd_full, char **cmd_args, char **env);
+
 
 #endif

@@ -3,19 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekosnick <ekosnick@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ekosnick <ekosnick@student.42.f>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 11:38:50 by ekosnick          #+#    #+#             */
-/*   Updated: 2025/05/23 11:38:51 by ekosnick         ###   ########.fr       */
+/*   Updated: 2025/06/09 10:42:30 by ekosnick         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "libft.h"
 
 // use a delimiter char to break a string into chuncks
 // ft__n_ofwords() to create 'n' to store the number of breaks (words) for
 // ft_split(). ft_aryfree() to free memory. Recursive word writing did not 
 // work  so ft_wwrite() to write each word, and ft_w_splt() to handle
 //  the arrray of pointers
-#include "libft.h"
 
 static int	ft_n_ofwords(char const *s, char c, int n)
 {
@@ -88,8 +89,6 @@ static char	**ft_w_splt(char **s_pnt, const char *s, char delim, int nw)
 	return (s_pnt);
 }
 
-// added the words parameter so that we can protect against a NULL return
-// this solved one of the problems.
 char	**ft_split(char const *s, char c)
 {
 	char	**ary4ary;
@@ -108,7 +107,7 @@ char	**ft_split(char const *s, char c)
 	return (words);
 }
 
-// Copy eac word, recursively
+// Copy each word, recursively
 // static char	**ft_write_words(char **words, char const *s, char c, int i)
 // {
 // 	char	*catch;

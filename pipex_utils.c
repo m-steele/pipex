@@ -6,20 +6,19 @@
 /*   By: ekosnick <ekosnick@student.42.f>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 12:20:49 by ekosnick          #+#    #+#             */
-/*   Updated: 2025/06/12 12:32:10 by ekosnick         ###   ########.fr       */
+/*   Updated: 2025/06/27 11:46:40 by ekosnick         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "pipex.h"
 
-char	*cmd_path(char **path_split, char *cmd)
+char	*cmd_path(int i, char **path_split, char *cmd)
 {
-	int		i;
 	char	*full_path;
 	char	*temp;
 	
 	i = 0;
-	while (path_split[i++])
+	while (path_split[i])
 	{
 		full_path = ft_strjoin(path_split[i], "/");
 		if (!full_path)
@@ -36,6 +35,7 @@ char	*cmd_path(char **path_split, char *cmd)
 			return (full_path);
 		}
 		free(full_path);
+		i++;
 	}
 	ft_free_split(path_split);
 	return (NULL);	
@@ -64,7 +64,7 @@ char	*pathfinder(char *cmd, char **env)
 	path_split = ft_split(path, ':');
 	if (!path_split)
 		return (NULL);
-	cmd_pt = cmd_path(path_split, cmd);
+	cmd_pt = cmd_path(i, path_split, cmd);
 	return (cmd_pt);
 }
 
