@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekosnick <ekosnick@student.42.f>           +#+  +:+       +#+        */
+/*   By: ekosnick <ekosnick@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/18 12:49:28 by ekosnick          #+#    #+#             */
-/*   Updated: 2025/06/27 10:00:47 by ekosnick         ###   ########.fr       */
+/*   Updated: 2025/06/29 14:09:12 by ekosnick         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,11 @@
 #  define BUFFER_SIZE 42
 # endif
 
+# include <stdio.h>
 # include <stddef.h>
 # include <limits.h>
 # include <unistd.h>
+# include <errno.h>
 # include <stdint.h>
 # include <string.h>
 # include <stdlib.h>

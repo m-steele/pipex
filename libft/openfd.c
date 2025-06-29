@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   openfd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekosnick <ekosnick@student.42.f>           +#+  +:+       +#+        */
+/*   By: ekosnick <ekosnick@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 09:56:37 by ekosnick          #+#    #+#             */
-/*   Updated: 2025/06/27 10:01:13 by ekosnick         ###   ########.fr       */
+/*   Updated: 2025/06/29 15:42:44 by ekosnick         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,12 @@
 int	openfd(char *fd, int in_out)
 {
 	if (in_out == 0)
-		return(open(fd, O_RDONLY));
+		return (open(fd, O_RDONLY));
 	if (in_out == 1)
-		return(open(fd, O_CREAT | O_WRONLY | O_TRUNC,
+		return (open(fd, O_CREAT | O_WRONLY | O_TRUNC,
 				S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH, 0644));
 	if (in_out == 2)
-			return (open(fd, O_CREAT | O_WRONLY | O_APPEND, 0644));
+		return (open(fd, O_CREAT | O_WRONLY | O_APPEND, 0644));
 	else
 		return (-1);
 }

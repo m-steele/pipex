@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex_utils.c                                      :+:      :+:    :+:   */
+/*   pipex_utils_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ekosnick <ekosnick@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 12:20:49 by ekosnick          #+#    #+#             */
-/*   Updated: 2025/06/29 10:53:12 by ekosnick         ###   ########.fr       */
+/*   Updated: 2025/06/29 13:58:41 by ekosnick         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,4 +89,25 @@ void	laypipe(char *cmd_full, char **cmd_args, char **env)
 		perror("Child Error:");
 		exit(EXIT_FAILURE);
 	}
+}
+
+void	here_doc_child_writer(char *delim, int fd)
+{
+	char	*ln;
+	size_t	len;
+
+	ln = NULL;
+	len = ft_strlen(delim);
+	while (1)
+	{
+		write(1, "here_doc: ", 10);
+		ln = get_next_line(0);
+		if (!ln || (ft_strncmp(ln, delim, len) == 0 && ln[len] == '\n'))
+			break ;
+		write(fd, ln, ft_strlen(ln));
+		free(ln);
+	}
+	free(ln);
+	close(fd);
+	exit(0);
 }

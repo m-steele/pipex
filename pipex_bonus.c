@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.c                                            :+:      :+:    :+:   */
+/*   pipex_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ekosnick <ekosnick@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 12:17:10 by ekosnick          #+#    #+#             */
-/*   Updated: 2025/06/29 13:44:49 by ekosnick         ###   ########.fr       */
+/*   Updated: 2025/06/29 15:27:14 by ekosnick         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,19 +68,55 @@ void	last_cmd(int ac, char **av, char **env)
 	execve(cmd_full, cmd_args, env);
 }
 
+void	here_doc_writer(char *delim)
+{
+	int		fd[2];
+
+	pipe(fd);
+	if (fork() == 0)
+	{
+		close(fd[0]);
+		here_doc_child_writer(delim, fd[1]);
+	}
+	wait(NULL);
+	close(fd[1]);
+	dup2(fd[0], 0);
+	close(fd[0]);
+}
+
+void	bonus_delim(int ac, char **av, char **env)
+{
+	int	i;
+	int	fdout;
+
+	if (ft_strncmp(av[1], "here_doc", 8) == 0 && ac >= 6)
+	{
+		here_doc_writer(av[2]);
+		i = 3;
+		while (i < ac - 2)
+			dig_ditch(av[i++], env);
+		fdout = openfd(av[ac - 1], 2);
+		dup2(fdout, 1);
+		close(fdout);
+		last_cmd(ac, av, env);
+	}
+	else
+		ft_printf("./pipex here_doc LIMITER cmd1 cmd2 outfile\n");
+}
+
 int	main(int ac, char **av, char **env)
 {
 	int		fdin;
 	int		fdout;
 	int		i;
 
-	if (ac == 5)
+	if (ac >= 6 && ft_strncmp(av[1], "here_doc", 8) == 0)
 	{
-		if (access(av[1], F_OK) != 0)
-		{
-			perror(av[1]);
-			return (1);
-		}
+		bonus_delim(ac, av, env);
+		return (0);
+	}
+	if (ac >= 5)
+	{
 		fdin = openfd(av[1], 0);
 		dup2(fdin, 0);
 		i = 2;
@@ -92,6 +128,6 @@ int	main(int ac, char **av, char **env)
 		return (0);
 	}
 	else
-		ft_printf("./pipex infile cmd1 cmd2 outfile\n");
+		ft_printf("./pipex [infile | here_doc LIMITER] cmd1 cmd2 outfile\n");
 	return (1);
 }

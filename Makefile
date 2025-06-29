@@ -1,98 +1,73 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: ekosnick <ekosnick@student.42.f>           +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2024/09/25 09:57:19 by ekosnick          #+#    #+#              #
-#    Updated: 2025/06/27 10:07:46 by ekosnick         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
+NAME		= pipex
+NAME_B		= pipex_bonus
 
-NAME = pipex
+CC			= gcc
+CFLAGS		= -Wall -Wextra -Werror -g
+INCLUDES	= -Ilibft
 
-CC = gcc
-CFLAGS = -Wall -Wextra -Werror -g
-INCLUDES = -Ilibft
-
-# Source files for the main application
-SRCS_MAIN = pipex.c pipex_utils.c\
-
-# Object files for the main application
-OBJ_DIR_MAIN = obj
-OBJS_MAIN = $(addprefix $(OBJ_DIR_MAIN)/, $(SRCS_MAIN:.c=.o))
-
-# Libft source files, object directory, and object files
-LIBFT_DIR = libft
-LIBFT_SRCS = 	$(LIBFT_DIR)/ft_abs.c $(LIBFT_DIR)/ft_atoi.c \
-				$(LIBFT_DIR)/ft_bzero.c $(LIBFT_DIR)/ft_calloc.c \
-				$(LIBFT_DIR)/ft_isalnum.c $(LIBFT_DIR)/ft_isalpha.c \
-				$(LIBFT_DIR)/ft_isascii.c $(LIBFT_DIR)/ft_isdigit.c \
-				$(LIBFT_DIR)/ft_isprint.c $(LIBFT_DIR)/ft_itoa.c \
-				$(LIBFT_DIR)/ft_lstadd_back.c $(LIBFT_DIR)/ft_lstadd_front.c \
-				$(LIBFT_DIR)/ft_lstclear.c $(LIBFT_DIR)/ft_lstdelone.c \
-				$(LIBFT_DIR)/ft_lstiter.c $(LIBFT_DIR)/ft_lstlast.c \
-				$(LIBFT_DIR)/ft_lstmap.c $(LIBFT_DIR)/ft_lstnew.c \
-				$(LIBFT_DIR)/ft_lstsize.c $(LIBFT_DIR)/ft_memchr.c \
-				$(LIBFT_DIR)/ft_memcmp.c $(LIBFT_DIR)/ft_memcpy.c \
-				$(LIBFT_DIR)/ft_memmove.c $(LIBFT_DIR)/ft_memset.c \
-				$(LIBFT_DIR)/ft_printf.c $(LIBFT_DIR)/ft_putchar_fd.c \
-				$(LIBFT_DIR)/ft_putendl_fd.c $(LIBFT_DIR)/ft_putnbr_fd.c \
-				$(LIBFT_DIR)/ft_putstr_fd.c $(LIBFT_DIR)/ft_split.c \
-				$(LIBFT_DIR)/ft_strchr.c $(LIBFT_DIR)/ft_strdup.c \
-				$(LIBFT_DIR)/ft_striteri.c $(LIBFT_DIR)/ft_strjoin.c \
-				$(LIBFT_DIR)/ft_strlcat.c $(LIBFT_DIR)/ft_strlcpy.c \
-				$(LIBFT_DIR)/ft_strlen.c $(LIBFT_DIR)/ft_strmapi.c \
-				$(LIBFT_DIR)/ft_strncmp.c $(LIBFT_DIR)/ft_strncpy.c \
-				$(LIBFT_DIR)/ft_strnstr.c $(LIBFT_DIR)/ft_strrchr.c \
-				$(LIBFT_DIR)/ft_strtrim.c $(LIBFT_DIR)/ft_substr.c \
-				$(LIBFT_DIR)/ft_tolower.c $(LIBFT_DIR)/ft_toupper.c \
-				$(LIBFT_DIR)/process_c.c $(LIBFT_DIR)/process_id.c \
-				$(LIBFT_DIR)/process_p.c $(LIBFT_DIR)/process_s.c \
-				$(LIBFT_DIR)/process_u.c $(LIBFT_DIR)/process_x.c \
-				$(LIBFT_DIR)/process_xx.c $(LIBFT_DIR)/ft_free_split.c \
-				$(LIBFT_DIR)/get_next_line.c $(LIBFT_DIR)/openfd.c \
-
+# Libft directory and sources
+LIBFT_DIR	= libft
 LIBFT_OBJ_DIR = $(LIBFT_DIR)/obj
-LIBFT_OBJS = $(patsubst $(LIBFT_DIR)/%.c, $(LIBFT_OBJ_DIR)/%.o, $(LIBFT_SRCS))
+LIBFT_SRCS	= ft_abs.c ft_atoi.c ft_bzero.c ft_calloc.c \
+			  ft_isalnum.c ft_isalpha.c ft_isascii.c ft_isdigit.c ft_isprint.c ft_itoa.c \
+			  ft_lstadd_back.c ft_lstadd_front.c ft_lstclear.c ft_lstdelone.c ft_lstiter.c \
+			  ft_lstlast.c ft_lstmap.c ft_lstnew.c ft_lstsize.c ft_memchr.c ft_memcmp.c \
+			  ft_memcpy.c ft_memmove.c ft_memset.c ft_printf.c ft_putchar_fd.c ft_putendl_fd.c \
+			  ft_putnbr_fd.c ft_putstr_fd.c ft_split.c ft_strchr.c ft_strdup.c ft_striteri.c \
+			  ft_strjoin.c ft_strlcat.c ft_strlcpy.c ft_strlen.c ft_strmapi.c ft_strncmp.c \
+			  ft_strncpy.c ft_strnstr.c ft_strrchr.c ft_strtrim.c ft_substr.c ft_tolower.c \
+			  ft_toupper.c process_c.c process_id.c process_p.c process_s.c process_u.c \
+			  process_x.c process_xx.c ft_free_split.c get_next_line.c openfd.c
 
-# All object files
-ALL_OBJS = $(OBJS_MAIN) $(LIBFT_OBJS)
+LIBFT_OBJS = $(addprefix $(LIBFT_OBJ_DIR)/, $(LIBFT_SRCS:.c=.o))
 
-# Default rule
-all: $(NAME)
+# Source files
+SRCS_MAIN	= pipex.c pipex_utils.c
+SRCS_BONUS	= pipex_bonus.c pipex_utils_bonus.c
 
-# Rule to create the target executable
-$(NAME): $(ALL_OBJS)
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(NAME) $(ALL_OBJS)
+OBJ_DIR		= obj
+OBJS_MAIN	= $(addprefix $(OBJ_DIR)/, $(SRCS_MAIN:.c=.o))
+OBJS_BONUS	= $(addprefix $(OBJ_DIR)/, $(SRCS_BONUS:.c=.o))
 
-# Rule to compile main source files into the main object directory
-$(OBJ_DIR_MAIN)/%.o: %.c | $(OBJ_DIR_MAIN)
+# Default target
+all: $(NAME) $(NAME_B)
+
+# Build main program
+$(NAME): $(OBJS_MAIN) $(LIBFT_OBJS)
+	$(CC) $(CFLAGS) -o $(NAME) $(OBJS_MAIN) $(LIBFT_OBJS)
+
+# Build bonus program
+$(NAME_B): $(OBJS_BONUS) $(LIBFT_OBJS)
+	$(CC) $(CFLAGS) -o $(NAME_B) $(OBJS_BONUS) $(LIBFT_OBJS)
+
+# Compile pipex and bonus sources
+$(OBJ_DIR)/%.o: %.c | $(OBJ_DIR)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-# Rule to compile libft source files into the libft object directory
+# Compile libft sources
 $(LIBFT_OBJ_DIR)/%.o: $(LIBFT_DIR)/%.c | $(LIBFT_OBJ_DIR)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-# Rule to create the object directories if they don't exist
-$(OBJ_DIR_MAIN):
-	mkdir -p $(OBJ_DIR_MAIN)
+# Create object directories if they don't exist
+$(OBJ_DIR):
+	mkdir -p $(OBJ_DIR)
 
 $(LIBFT_OBJ_DIR):
 	mkdir -p $(LIBFT_OBJ_DIR)
 
-# Clean rule: remove object files
+# Clean object files
 clean:
-	rm -rf $(OBJ_DIR_MAIN)
+	rm -rf $(OBJ_DIR)
 	rm -rf $(LIBFT_OBJ_DIR)
 
-# Full clean rule: remove object files and the executable
+# Remove executables and object files
 fclean: clean
-	rm -f $(NAME)
+	rm -f $(NAME) $(NAME_B)
 
-# Re-compile rule: full clean then build all
+# Rebuild everything
 re: fclean all
 
-# Phony targets (targets that are not actual files)
-.PHONY: all clean fclean re
+#Bonus-only build
+bonus: $(NAME_B)
+
+.PHONY: all clean fclean re bonus
