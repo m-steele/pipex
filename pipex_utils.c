@@ -6,7 +6,7 @@
 /*   By: ekosnick <ekosnick@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 12:20:49 by ekosnick          #+#    #+#             */
-/*   Updated: 2025/06/30 14:40:26 by ekosnick         ###   ########.fr       */
+/*   Updated: 2025/06/30 16:57:01 by ekosnick         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,32 @@ char	*pathfinder(char *cmd, char **env)
 }
 
 int	laypipe(char *cmd_full, char **cmd_args, char **env)
+{
+	int		fd[2];
+	int		pid;
+
+	if (pipe(fd) == -1)
+		exit(EXIT_FAILURE);
+	pid = fork();
+	if (pid == -1)
+		exit(EXIT_FAILURE);
+	if (pid == 0)
+	{
+		close(fd[0]);
+		dup2(fd[1], STDOUT_FILENO);
+		execve(cmd_full, cmd_args, env);
+		perror("Child Exec Error:");
+		exit(EXIT_FAILURE);
+	}
+	else
+	{
+		close(fd[1]);
+		dup2(fd[0], STDIN_FILENO);
+		return (pid);
+	}
+}
+
+int	laypipe2(char *cmd_full, char **cmd_args, char **env)
 {
 	int		fd[2];
 	int		pid;

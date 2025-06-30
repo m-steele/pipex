@@ -6,7 +6,7 @@
 /*   By: ekosnick <ekosnick@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 12:17:10 by ekosnick          #+#    #+#             */
-/*   Updated: 2025/06/30 16:42:59 by ekosnick         ###   ########.fr       */
+/*   Updated: 2025/06/30 17:02:40 by ekosnick         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,11 @@ int	dig_ditch(char *av, char **env)
 	return (pid);
 }
 
-void	last_cmd(int ac, char **av, char **env)
+int	last_cmd(int ac, char **av, char **env)
 {
 	char	*cmd_full;
 	char	**cmd_args;
-	// int		pid;
+	int		pid;
 
 	cmd_args = ft_split(av[ac - 2], ' ');
 	if (!cmd_args)
@@ -64,11 +64,12 @@ void	last_cmd(int ac, char **av, char **env)
 		ft_free_split(cmd_args);
 		exit(127);
 	}
-	// pid = laypipe(cmd_full, cmd_args, env);
-	// free(cmd_full);
-	// ft_free_split(cmd_args);
-	// return (pid);
-	execve(cmd_full, cmd_args, env);
+	pid = laypipe2(cmd_full, cmd_args, env);
+	free(cmd_full);
+	ft_free_split(cmd_args);
+	return (pid);
+
+	// execve(cmd_full, cmd_args, env);
 }
 
 int	main(int ac, char **av, char **env)
@@ -105,9 +106,15 @@ int	main(int ac, char **av, char **env)
 /*	THERE IS SOME TYPE OF PROBLEM HERE WHRE EITHER WITH MATING
 THE OUTFILE OR THE EXECUTION OF THE LAST COMMAND
 FARANCE SAYS THAT YOU JUST HANDLE THE CHILD AS YOU DO IN LAYPIPE()
-AND THAT SHOULD DEAL WITH IT.*/
+AND THAT SHOULD DEAL WITH IT.
 
-		last_cmd(ac, av, env);
+REMEMBER THAT THE HEADER FILE IS CHANGED ....
+
+check farenc's utilities 2
+*/
+
+		if (last_cmd(ac, av, env))
+			printf("word\n");
 		return (0);
 	}
 	else

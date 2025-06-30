@@ -6,7 +6,7 @@
 /*   By: ekosnick <ekosnick@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 12:11:15 by ekosnick          #+#    #+#             */
-/*   Updated: 2025/06/30 14:26:45 by ekosnick         ###   ########.fr       */
+/*   Updated: 2025/06/30 16:57:24 by ekosnick         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@
 char	*cmd_path(int i, char **path_split, char *cmd);
 char	*pathfinder(char *cmd, char **env);
 int		laypipe(char *cmd_full, char **cmd_args, char **env);
+int		laypipe2(char *cmd_full, char **cmd_args, char **env);
 void	here_doc_child_writer(char *delim, int fd);
 
 #endif
