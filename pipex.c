@@ -3,95 +3,95 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekosnick <ekosnick@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ekosnick <ekosnick@student.42.f>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 12:17:10 by ekosnick          #+#    #+#             */
-/*   Updated: 2025/06/29 13:44:49 by ekosnick         ###   ########.fr       */
+/*   Updated: 2025/07/02 13:35:27 by ekosnick         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	dig_ditch(char *av, char **env)
+void	child1(t_pip p, int *pipefd, char **av, char **env)
 {
-	char	*cmd_full;
-	char	**cmd_args;
+	int saved_cmd;
 
-	cmd_args = ft_split(av, ' ');
-	if (!cmd_args)
+	if (p.pid1 == 0)
 	{
-		perror("split failed");
-		return ;
+		if (dup2(p.fdin, STDIN_FILENO) == -1)
+		{
+			ft_printf("Input file:'%s' not found\n", av[1]);
+			exit(1);
+		}
+		saved_cmd = dup(STDOUT_FILENO);
+		dup2(pipefd[1], STDOUT_FILENO);
+		close(pipefd[0]);
+		close(pipefd[1]);
+		exec_cmd(saved_cmd, av[2], env);
 	}
-	if (!cmd_args[0] || !cmd_args[0][0])
-	{
-		printf("Empty command\n");
-		ft_free_split(cmd_args);
-		return ;
-	}
-	cmd_full = pathfinder(cmd_args[0], env);
-	if (!cmd_full)
-	{
-		printf("Command '%s' not found\n", cmd_args[0]);
-		ft_free_split(cmd_args);
-		return ;
-	}
-	laypipe(cmd_full, cmd_args, env);
-	free(cmd_full);
-	ft_free_split(cmd_args);
 }
 
-void	last_cmd(int ac, char **av, char **env)
+void	child2(t_pip p, int *pipefd, char **av, char **env)
 {
-	char	*cmd_full;
-	char	**cmd_args;
+	int saved_cmd;
+	
+	if (p.pid2 == 0)
+	{
+		saved_cmd = dup(STDOUT_FILENO);
+		dup2(pipefd[0], STDIN_FILENO);
+		if (dup2(p.fdout, STDOUT_FILENO) == -1)
+		{
+			ft_printf("Outfile '%s' failed\n", av[4]);
+			exit(1);
+		}
+		close(pipefd[0]);
+		close(pipefd[1]);
+		exec_cmd(saved_cmd, av[3], env);
+	}
+}
 
-	cmd_args = ft_split(av[ac - 2], ' ');
-	if (!cmd_args)
+void	parent(t_pip p, int *pipefd)
+{
+	close(pipefd[0]);
+	close(pipefd[1]);
+	waitpid(p.pid1, NULL, 0);
+	waitpid(p.pid2, NULL, 0);	
+}
+
+int	start_pipex(int ac, char **av, char **env)
+{
+	t_pip	p;
+	int		pipefd[2];
+
+	if (access(av[1], F_OK) != 0)
 	{
-		printf("split failed\n");
-		exit(127);
+		perror(av[1]);
+		return (1);
 	}
-	if (!cmd_args[0] || !cmd_args[0][0])
+	pipe(pipefd);
+	p.fdin = openfd(av[1], 0);
+	p.fdout = openfd(av[ac - 1], 1);
+	if (p.fdin < 0 || p.fdout < 0)
 	{
-		printf("Empty command\n");
-		ft_free_split(cmd_args);
-		exit(127);
+		perror("open");
+		return (1);
 	}
-	cmd_full = pathfinder(cmd_args[0], env);
-	if (!cmd_full)
-	{
-		printf("Command '%s' not found\n", cmd_args[0]);
-		ft_free_split(cmd_args);
-		exit(127);
-	}
-	execve(cmd_full, cmd_args, env);
+	p.pid1 = fork();
+	child1(p, pipefd, av, env);
+	p.pid2 = fork();
+	child2(p, pipefd, av, env);
+	parent(p, pipefd);
+	return (0);
 }
 
 int	main(int ac, char **av, char **env)
 {
-	int		fdin;
-	int		fdout;
-	int		i;
-
-	if (ac == 5)
+	if (ac != 5)
 	{
-		if (access(av[1], F_OK) != 0)
-		{
-			perror(av[1]);
-			return (1);
-		}
-		fdin = openfd(av[1], 0);
-		dup2(fdin, 0);
-		i = 2;
-		while (i < ac -2)
-			dig_ditch(av[i++], env);
-		fdout = openfd(av[ac - 1], 1);
-		dup2(fdout, 1);
-		last_cmd(ac, av, env);
-		return (0);
+	ft_printf("./pipex infile cmd1 cmd2 outfile\n");
+	return (1);	
 	}
-	else
-		ft_printf("./pipex infile cmd1 cmd2 outfile\n");
-	return (1);
+	start_pipex(ac, av, env);
+	return (0);
 }
+

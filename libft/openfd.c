@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   openfd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekosnick <ekosnick@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ekosnick <ekosnick@student.42.f>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 09:56:37 by ekosnick          #+#    #+#             */
-/*   Updated: 2025/06/29 16:10:02 by ekosnick         ###   ########.fr       */
+/*   Updated: 2025/07/02 10:23:05 by ekosnick         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,3 +24,18 @@ int	openfd(char *fd, int in_out)
 	else
 		return (-1);
 }
+
+// int openfd(char *filename, int mode)
+// {
+// 	int fd;
+
+// 	if (mode == 0)
+// 		fd = open(filename, O_RDONLY);
+// 	else if (mode == 1)
+// 		fd = open(filename, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+// 	else
+// 		fd = open(filename, O_CREAT | O_WRONLY | O_APPEND, 0644);
+// 	if (fd < 0)
+// 		perror("open failed");
+// 	return (fd);
+// }

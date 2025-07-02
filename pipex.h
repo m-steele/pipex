@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ekosnick <ekosnick@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ekosnick <ekosnick@student.42.f>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 12:11:15 by ekosnick          #+#    #+#             */
-/*   Updated: 2025/06/29 13:23:51 by ekosnick         ###   ########.fr       */
+/*   Updated: 2025/07/02 13:17:19 by ekosnick         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,19 @@
 # include <limits.h>   /* PATH_MAX (recommended for full_path buffer) */
 # include "libft/libft.h"
 
+typedef struct s_pip
+{
+	int	pid1;
+	int	pid2;
+	int	fdin;
+	int	fdout;
+}	t_pip;
+
 /*pipex_utils*/
 char	*cmd_path(int i, char **path_split, char *cmd);
 char	*pathfinder(char *cmd, char **env);
 void	laypipe(char *cmd_full, char **cmd_args, char **env);
+void	exec_cmd(int saved_cmd, char *av, char **env);
 void	here_doc_child_writer(char *delim, int fd);
 
 #endif
