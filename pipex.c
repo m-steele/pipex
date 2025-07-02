@@ -6,7 +6,7 @@
 /*   By: ekosnick <ekosnick@student.42.f>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 12:17:10 by ekosnick          #+#    #+#             */
-/*   Updated: 2025/07/02 13:35:27 by ekosnick         ###   ########.fr       */
+/*   Updated: 2025/07/02 14:11:34 by ekosnick         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	child1(t_pip p, int *pipefd, char **av, char **env)
 {
-	int saved_cmd;
+	int	saved_cmd;
 
 	if (p.pid1 == 0)
 	{
@@ -33,8 +33,8 @@ void	child1(t_pip p, int *pipefd, char **av, char **env)
 
 void	child2(t_pip p, int *pipefd, char **av, char **env)
 {
-	int saved_cmd;
-	
+	int	saved_cmd;
+
 	if (p.pid2 == 0)
 	{
 		saved_cmd = dup(STDOUT_FILENO);
@@ -55,7 +55,7 @@ void	parent(t_pip p, int *pipefd)
 	close(pipefd[0]);
 	close(pipefd[1]);
 	waitpid(p.pid1, NULL, 0);
-	waitpid(p.pid2, NULL, 0);	
+	waitpid(p.pid2, NULL, 0);
 }
 
 int	start_pipex(int ac, char **av, char **env)
@@ -88,10 +88,9 @@ int	main(int ac, char **av, char **env)
 {
 	if (ac != 5)
 	{
-	ft_printf("./pipex infile cmd1 cmd2 outfile\n");
-	return (1);	
+		ft_printf("./pipex infile cmd1 cmd2 outfile\n");
+		return (1);
 	}
 	start_pipex(ac, av, env);
 	return (0);
 }
-

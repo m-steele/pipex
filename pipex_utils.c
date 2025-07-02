@@ -6,7 +6,7 @@
 /*   By: ekosnick <ekosnick@student.42.f>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 12:20:49 by ekosnick          #+#    #+#             */
-/*   Updated: 2025/07/02 12:29:20 by ekosnick         ###   ########.fr       */
+/*   Updated: 2025/07/02 14:13:23 by ekosnick         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,8 @@ char	*pathfinder(char *cmd, char **env)
 
 void	exec_cmd(int saved_cmd, char *av, char **env)
 {
-	char **cmd_args;
-	char *cmd_full;
+	char	**cmd_args;
+	char	*cmd_full;
 
 	cmd_args = ft_split(av, ' ');
 	cmd_full = pathfinder(cmd_args[0], env);
@@ -112,26 +112,3 @@ void	laypipe(char *cmd_full, char **cmd_args, char **env)
 		exit(EXIT_FAILURE);
 	}
 }
-
-// void	laypipe2(char *cmd_full, char **cmd_args, char **env)
-// {
-// 	int		fd[2];
-// 	int		pid;
-
-// 	pipe(fd);
-// 	pid = fork();
-// 	if (pid > 0)
-// 	{
-// 		close(fd[1]);
-// 		dup2(fd[0], 0);
-// 		waitpid(pid, NULL, 0);
-// 	}
-// 	if (pid == 0)
-// 	{
-// 		close(fd[0]);
-// 		dup2(fd[1], 1);
-// 		execve(cmd_full, cmd_args, env);
-// 		perror("Child Error:");
-// 		exit(EXIT_FAILURE);
-// 	}
-// }
